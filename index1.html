@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Profiles</title>
+</head>
+
+<body>
+    <h1>User Profiles</h1>
+    <div id="userProfiles"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('userProfiles.json')
+                .then(response => {
+                    if (!response.ok)
+                        throw new Error('Fetch error: ' + response.status);
+                    else
+                        return response.json();
+                })
+                .then(json => {
+                    const userProfilesContainer = document.getElementById('userProfiles');
+                    json.forEach(user => {
+                        const userProfile = document.createElement('div');
+                        userProfile.innerHTML = `
+                            <p><strong>First Name:</strong> ${user.firstName} ${user.lastName}</p>
+                            <p><strong>Email:</strong> ${user.email}</p>
+                            <p><strong>Date of Birth:</strong> ${user.dateOfBirth}</p>
+                            <p><strong>Address:</strong> ${user.address.street}, ${user.address.city}, ${user.address.state}, ${user.address.zipCode}</p>
+                            <p><strong>Preferences:</strong> Theme - ${user.preferences.theme}, Language - ${user.preferences.language}, Notifications - ${user.preferences.notifications}</p>
+                            <p><strong>Subscription:</strong> ${user.subscription ? 'Yes' : 'No'}</p>
+                        `;
+                        userProfilesContainer.appendChild(userProfile);
+                    });
+                })
+                .catch(err => console.error('Fetch error: ' + err.message));
+        });
+    </script>
+</body>
+
+</html>
